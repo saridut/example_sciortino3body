@@ -1,0 +1,39 @@
+# Example for the Sciortino 3-body potential with two atom types.
+
+dimension	3
+units		lj
+atom_style	full
+boundary    p p p
+
+read_data   atm_data.txt
+
+#Use a Mie potential for minimization
+
+pair_style	mie/cut 1.072
+pair_modify shift yes
+pair_coeff	* * 1.0 1.0 200 100
+
+neighbor	0.3 bin
+neigh_modify	every 1 delay 0 check yes
+
+timestep 0.001
+
+restart 5000 revive/revive.bin
+
+thermo  1000
+minimize   0.0  0.0  1000 100000
+
+# MD run
+reset_timestep 0
+
+velocity	all create 0.03 100 dist gaussian
+
+pair_style	sciortino 
+pair_coeff	* *  pot_AB.sciortino  A  B
+
+# Using the Langevin thermostat with GJF-2GK algorithm
+
+fix FX_2 all langevin 0.03 0.03 0.6 1001 gjf vhalf
+fix FX_1 all nve
+dump dmp2 all custom 100 traj/history_*.txt id type x y z fx fy fz
+run		100000

@@ -1,0 +1,56 @@
+# Test for the Sciortino potential with hand-picked atom positions
+
+units		lj
+dimension	3
+
+atom_style	atomic
+region RGN1 block 0.0 10.0 0.0 10.0 0.0 10.0
+boundary    p p p
+create_box  2 RGN1
+
+create_atoms 1 single 5.0 5.0 5.0 units box
+create_atoms 2 single 3.9 5.0 5.0 units box
+#create_atoms 2 single 6.08 5.0 5.0 units box
+#create_atoms 2 single 5.0 3.6 5.0 units box
+create_atoms 2 single 5.0 6.0005 5.0 units box
+
+mass 1 1.0
+mass 2 1.0
+
+#read_data   tfr.txt
+
+#pair_style	mie/cut 2.0
+#pair_modify shift no
+#pair_coeff	* * 1.0 1.0 20 10
+
+#pair_style	lj/cut 2.0
+#pair_modify shift no
+#pair_coeff	1 1 1.0 1.0
+
+pair_style	sciortino 
+pair_coeff	* *  pot_AB.sciortino  A  B
+
+neighbor	0.3 bin
+neigh_modify	every 1 delay 0 check yes
+
+timestep 0.002
+
+#restart 5000 revive/revive.bin
+
+thermo_modify norm no
+thermo  1
+#minimize   0.0  0.0  1000 100000
+
+#reset_timestep 0
+
+#velocity	all create 0.03 100 dist gaussian
+velocity	all set 0.0 0.0 0.0
+
+#pair_style	sciortino 
+#pair_coeff	* *  pot_AB.sciortino  A  B
+
+#fix FX_2 all langevin 0.09 0.09 0.6 1001 gjf vhalf
+fix FX_1 all nve
+dump dmp2 all custom 1 nve/history_nve_*.txt id type x y z fx fy fz
+dump_modify dmp2 sort id
+run		0

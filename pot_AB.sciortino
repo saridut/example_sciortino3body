@@ -1,0 +1,13 @@
+# DATE: 2021-08-30 UNITS: lj
+
+# These entries are in LAMMPS "lj" units, m, lambda are dimensionless.
+
+#        epsilon  sigma  m       rcut      lambda
+A A A    1.0      1.00   100.0   0.0       1.0   
+B B B    1.0      1.00   100.0   0.0       1.0   
+A A B    1.0      0.0    0.0     0.0       1.0   
+A B B    1.0      1.00   100.0   1.2       1.0   
+B A A    1.0      1.00   100.0   1.2       1.0   
+B A B    1.0      0.0    0.0     0.0       1.0   
+B B A    1.0      0.0    0.0     0.0       1.0   
+A B A    1.0      0.0    0.0     0.0       1.0   
